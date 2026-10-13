@@ -12,6 +12,8 @@ backend/.next/
 backend/dist/
 *.tsbuildinfo
 .vercel/
+.vite/
+frontend/.vite/
 
 # Environment Secrets & Local Configs (Strictly Never Commit)
 .env
