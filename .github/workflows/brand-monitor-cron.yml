@@ -1,0 +1,68 @@
+name: "RiskShield AI — Automated Brand Monitor Cron Runner"
+
+on:
+  schedule:
+    # Trigger hourly at minute 0 (UTC)
+    - cron: '0 * * * *'
+  workflow_dispatch:
+    # Allows manual trigger from GitHub Actions console for testing
+    inputs:
+      batch_size:
+        description: 'Batch size for scheduled execution (default: 3)'
+        required: false
+        default: '3'
+
+jobs:
+  run-brand-monitor:
+    name: "Execute Brand Monitor Batch"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: "Mask Secrets"
+        run: |
+          if [ -n "${{ secrets.CRON_SECRET }}" ]; then
+            echo "::add-mask::${{ secrets.CRON_SECRET }}"
+          fi
+
+      - name: "Validate Configuration"
+        run: |
+          if [ -z "${{ secrets.BACKEND_API_URL }}" ]; then
+            echo "::error::BACKEND_API_URL secret is not configured in GitHub repository secrets."
+            exit 1
+          fi
+          if [ -z "${{ secrets.CRON_SECRET }}" ]; then
+            echo "::error::CRON_SECRET secret is not configured in GitHub repository secrets."
+            exit 1
+          fi
+
+      - name: "Trigger Protected Cron Endpoint"
+        id: trigger_cron
+        env:
+          API_URL: ${{ secrets.BACKEND_API_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          BATCH_SIZE: ${{ github.event.inputs.batch_size || '3' }}
+        run: |
+          ENDPOINT="${API_URL%/}/api/cron/brand-monitor?batchSize=${BATCH_SIZE}"
+          echo "Dispatching POST to cron runner: ${API_URL%/}/api/cron/brand-monitor (batchSize=${BATCH_SIZE})"
+          
+          START_TIME=$(date +%s)
+          HTTP_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$ENDPOINT" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -H "Content-Type: application/json" \
+            --max-time 55)
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - START_TIME))
+
+          HTTP_BODY=$(echo "$HTTP_RESPONSE" | sed '$d')
+          HTTP_STATUS=$(echo "$HTTP_RESPONSE" | tail -n1)
+
+          echo "Execution completed in ${DURATION}s with HTTP Status: ${HTTP_STATUS}"
+
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "::error::Cron trigger failed with HTTP status ${HTTP_STATUS}"
+            echo "Response Payload: ${HTTP_BODY}"
+            exit 1
+          fi
+
+          echo "Response Summary: ${HTTP_BODY}"

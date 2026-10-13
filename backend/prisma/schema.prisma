@@ -1,0 +1,307 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  USER
+  BRAND_OWNER
+  ADMIN
+}
+
+enum AccountStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  SUSPENDED
+}
+
+enum BrandType {
+  COMPANY_PRODUCT
+  CREATOR_PUBLIC_FIGURE
+  GOVERNMENT_INSTITUTION
+  MARKETPLACE_SELLER
+}
+
+enum BrandStatus {
+  PENDING_VERIFICATION
+  VERIFIED
+  FEATURED_PARTNER
+  REJECTED
+}
+
+enum BrandMemberRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum MembershipStatus {
+  ACTIVE
+  INVITED
+  REVOKED
+}
+
+enum BrandAssetType {
+  DOMAIN
+  SUBDOMAIN
+  SOCIAL_HANDLE
+  TRADEMARK
+  MERCHANT
+  MOBILE_APP
+  CONTACT_CHANNEL
+}
+
+enum AssetVerificationStatus {
+  PENDING_VERIFICATION
+  PENDING_DNS
+  VERIFIED
+  DISPUTED
+  REJECTED
+}
+
+enum RiskStatus {
+  KNOWN_THREAT
+  HIGH_RISK
+  SUSPICIOUS
+  INCONCLUSIVE
+  NO_KNOWN_THREAT_DETECTED
+}
+
+enum FindingStatus {
+  NEW
+  UNDER_INVESTIGATION
+  UNDER_REVIEW
+  TAKEDOWN_REQUESTED
+  CONFIRMED_THREAT
+  FALSE_POSITIVE
+  RESOLVED
+}
+
+/**
+ * Core application user profile mapped 1:1 with Supabase Auth `auth.users.id`.
+ * SECURITY INVARIANT: Never stores plaintext passwords or password hashes.
+ */
+model User {
+  id                String            @id @default(uuid())
+  email             String            @unique
+  fullName          String?
+  displayName       String?
+  role              UserRole          @default(USER)
+  accountStatus     AccountStatus     @default(PENDING_VERIFICATION)
+  isEmailVerified   Boolean           @default(false)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  personalScans     ScanRecord[]
+  threatWatchItems  ThreatWatchItem[]
+  brandMemberships  BrandMembership[]
+  auditEvents       AuditEvent[]
+
+  @@index([email])
+  @@map("users")
+}
+
+/**
+ * Brand Workspace entity.
+ * Starts in `PENDING_VERIFICATION` status; never auto-verified on user submission.
+ */
+model Brand {
+  id                   String               @id @default(uuid())
+  name                 String
+  slug                 String               @unique
+  brandType            BrandType            @default(COMPANY_PRODUCT)
+  category             String
+  country              String?
+  website              String?
+  description          String?
+  logoInitial          String               @default("B")
+  accentColor          String               @default("#FF5500")
+  businessEmail        String?
+  supportEmail         String?
+  securityContactEmail String?
+  officialPhone        String?
+  status               BrandStatus          @default(PENDING_VERIFICATION)
+  dnsTxtToken          String?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+
+  memberships          BrandMembership[]
+  officialAssets       BrandAsset[]
+  threatFindings       BrandThreatFinding[]
+  brandScans           ScanRecord[]
+  auditEvents          AuditEvent[]
+  monitorSchedule      BrandMonitorSchedule?
+
+  @@index([slug])
+  @@index([status])
+  @@map("brands")
+}
+
+/**
+ * Explicit many-to-many authorization relationship between a User and a Brand Workspace.
+ */
+model BrandMembership {
+  id          String           @id @default(uuid())
+  userId      String
+  brandId     String
+  role        BrandMemberRole  @default(MEMBER)
+  status      MembershipStatus @default(ACTIVE)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  brand       Brand            @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, brandId])
+  @@index([userId])
+  @@index([brandId])
+  @@map("brand_memberships")
+}
+
+/**
+ * Official brand reference asset (domain, social handle, mobile app, contact channel).
+ * Defaults to `PENDING_VERIFICATION` — never auto-verified upon submission.
+ */
+model BrandAsset {
+  id              String                  @id @default(uuid())
+  brandId         String
+  type            BrandAssetType
+  platform        String?
+  value           String
+  normalizedValue String
+  status          AssetVerificationStatus @default(PENDING_VERIFICATION)
+  dnsTxtRecord    String?
+  verifiedAt      DateTime?
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+
+  brand           Brand                   @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  @@index([brandId])
+  @@index([normalizedValue])
+  @@map("brand_assets")
+}
+
+model ScanRecord {
+  id               String     @id @default(uuid())
+  userId           String?
+  brandId          String?
+  target           String
+  normalizedTarget String
+  category         String
+  mode             String
+  status           RiskStatus
+  score            Int
+  explanation      String
+  contextPayload   Json?
+  evidence         Json
+  sourcesChecked   String[]
+  createdAt        DateTime   @default(now())
+
+  user             User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  brand            Brand?     @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([brandId])
+  @@index([normalizedTarget])
+  @@map("scan_records")
+}
+
+model BrandThreatFinding {
+  id                    String                @id @default(uuid())
+  brandId               String
+  target                String
+  platform              String
+  severity              String
+  riskScore             Int
+  status                FindingStatus         @default(NEW)
+  detectionReason       String
+  officialAssetCompared String?
+  evidence              Json
+  repeatScanCount       Int                   @default(1)
+  detectedAt            DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+
+  brand                 Brand                 @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  investigations        ThreatInvestigation[]
+
+  @@index([brandId])
+  @@index([status])
+  @@map("brand_threat_findings")
+}
+
+model ThreatInvestigation {
+  id          String             @id @default(uuid())
+  findingId   String
+  authorEmail String
+  note        String
+  actionTaken String?
+  createdAt   DateTime           @default(now())
+
+  finding     BrandThreatFinding @relation(fields: [findingId], references: [id], onDelete: Cascade)
+
+  @@index([findingId])
+  @@map("threat_investigations")
+}
+
+model ThreatWatchItem {
+  id                   String     @id @default(uuid())
+  userId               String
+  target               String
+  targetType           String
+  assessment           RiskStatus
+  monitoringStatus     String     @default("Monitoring")
+  notificationsEnabled Boolean    @default(true)
+  notes                String?
+  createdAt            DateTime   @default(now())
+
+  user                 User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("threat_watch_items")
+}
+
+model AuditEvent {
+  id        String   @id @default(uuid())
+  userId    String?
+  brandId   String?
+  action    String
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  brand     Brand?   @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([brandId])
+  @@map("audit_events")
+}
+
+model BrandMonitorSchedule {
+  id                  String    @id @default(uuid())
+  brandId             String    @unique
+  enabled             Boolean   @default(false)
+  frequencyHours      Int       @default(24)
+  status              String    @default("IDLE") // IDLE, RUNNING, COMPLETED, FAILED
+  lastRunAt           DateTime?
+  nextRunAt           DateTime  @default(now())
+  lockedUntil         DateTime? // Distributed lease lock timestamp
+  lockedBy            String?   // Worker / instance identifier
+  consecutiveFailures Int       @default(0)
+  lastError           String?
+  lastFindingsFound   Int       @default(0)
+  lastAssetsScanned   Int       @default(0)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  brand               Brand     @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  @@index([enabled, nextRunAt])
+  @@index([lockedUntil])
+  @@map("brand_monitor_schedules")
+}
