@@ -1,410 +1,503 @@
+🛡️ RiskShield AI — Digital Risk Intelligence & Brand Protection Platform
 
-🛡️ RiskShield AI
-Digital Risk Intelligence & Brand Protection Platform
-Assess suspicious digital targets. Monitor brand identity. Investigate threats with structured evidence.
-� � � � � �
-Overview • Features • Architecture • Setup • Deployment • Security
+<p align="center">
+  <strong>Detect suspicious links. Investigate digital threats. Protect brands.</strong>
+</p><p align="center">
+  <a href="https://riskshield-ai-protect.vercel.app/">
+    <img src="https://img.shields.io/badge/Live%20Demo-Open%20RiskShield%20AI-00C853?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
+  </a>
+  <a href="https://github.com/Manukonda-Teja-Harsha/RiskShield-AI">
+    <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github" alt="GitHub Repository" />
+  </a>
+</p><p align="center">
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-5.7-3178C6?style=flat&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Vite-Frontend-646CFF?style=flat&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/Next.js-API%20Backend-000000?style=flat&logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/Prisma-ORM-2D3748?style=flat&logo=prisma&logoColor=white" alt="Prisma" />
+  <img src="https://img.shields.io/badge/Supabase-PostgreSQL-3FCF8E?style=flat&logo=supabase&logoColor=white" alt="Supabase" />
+</p>---
 
-📌 Overview
-RiskShield AI is a digital risk and brand-protection platform designed to help individuals assess potentially unsafe online targets and help organizations protect their official digital identity. It brings risk assessments, personal threat tracking, brand asset registration, structured threat findings, investigation notes, and scheduled brand monitoring into one workflow.
-The problem
-People encounter suspicious links, phishing lures, and impersonation attempts without enough context to assess them.
-Brand teams need ways to track lookalike domains, fake social accounts, and suspected misuse of a brand identity.
-Evidence and investigation notes can become fragmented across dashboards, messages, and spreadsheets.
-Periodic monitoring needs execution status and failure visibility—not just a list of assets.
-The approach
-RiskShield AI combines individual risk assessment with brand-focused monitoring and investigation workflows. Its domain model records risk results, evidence, official brand assets, threat findings, investigation notes, and monitoring-job state so users and teams can review activity over time.
-[!IMPORTANT] Risk results are assessments, not guarantees. “No known threat detected” does not prove a target is safe, and a suspicious result may require human review. Detection quality depends on implemented scanning logic, available sources, and their freshness.
-🧭 Table of Contents
-Overview
-Key Features
-Who Is It For?
-User Workflows
-System Architecture
-Technology Stack
-Repository Structure
-Getting Started
-Environment Configuration
-Available Commands
-Data Model
-Security and Privacy
-Testing and Quality Checks
-Deployment
-Troubleshooting
-Roadmap
-Contributing
-Responsible Use
-Documentation and References
-License
+🌐 Live Demo
+
+Try RiskShield AI: "https://riskshield-ai-protect.vercel.app" (https://riskshield-ai-protect.vercel.app)
+
+Source Code: "GitHub Repository" (https://github.com/Manukonda-Teja-Harsha/RiskShield-AI)
+
+RiskShield AI is a digital risk intelligence and brand-protection platform designed to help users assess suspicious URLs, understand security findings, investigate potential threats, and monitor brand-related risks.
+
+«Important: Risk assessments are decision-support information, not a guarantee of safety. A result with no known threat matches does not prove that a URL is safe, especially when external intelligence providers are unavailable or coverage is limited.»
+
+📑 Table of Contents
+
+- "Overview" (#-overview)
+- "Key Features" (#-key-features)
+- "Who Is It For?" (#-who-is-it-for)
+- "How It Works" (#-how-it-works)
+- "Main Intelligence Analysis" (#-main-intelligence-analysis)
+- "Technology Stack" (#-technology-stack)
+- "System Architecture" (#-system-architecture)
+- "Project Structure" (#-project-structure)
+- "Getting Started" (#-getting-started)
+- "Environment Configuration" (#-environment-configuration)
+- "Available Scripts" (#-available-scripts)
+- "Security and Privacy" (#-security-and-privacy)
+- "Threat Intelligence and Limitations" (#-threat-intelligence-and-limitations)
+- "Testing and Verification" (#-testing-and-verification)
+- "Deployment" (#-deployment)
+- "Troubleshooting" (#-troubleshooting)
+- "Roadmap" (#-roadmap)
+- "Contributing" (#-contributing)
+- "Responsible Use" (#-responsible-use)
+- "License" (#-license)
+
+---
+
+🚀 Overview
+
+Digital threats such as phishing websites, impersonation pages, suspicious domains, scam messages, and fraudulent brand accounts can put users and organizations at risk.
+
+RiskShield AI aims to bring risk assessment, threat intelligence, evidence review, and investigation workflows together in one platform.
+
+The platform is designed around two primary experiences:
+
+- Personal Account: Submit suspicious links or supported inputs and review available risk assessments.
+- Brand Workspace: Manage brand information, review potential threats, investigate findings, and monitor brand-related risks.
+
+The system separates risk scores, confidence, verdicts, evidence, provider availability, and intelligence coverage to avoid presenting incomplete information as a definitive safety result.
+
 ✨ Key Features
-1. Suspicious-target scanning and risk assessment
-The scanning workflow is designed to assess supported digital targets and present a structured result rather than a bare warning.
-Input classification and normalization.
-Risk status and numeric score.
-Human-readable explanation.
-Structured evidence and sources checked, where available.
-Scan records associated with a user or brand workspace.
-The domain model defines these risk states:
-Status
-Meaning
-KNOWN_THREAT
-The assessment identifies a known threat.
-HIGH_RISK
-The target has indicators associated with elevated risk.
-SUSPICIOUS
-The target requires additional scrutiny.
-INCONCLUSIVE
-Available information is insufficient for a confident assessment.
-NO_KNOWN_THREAT_DETECTED
-No known threat was identified; this is not a safety guarantee.
-2. Personal dashboard and scan history
-Review previous scans and their recorded outcomes.
-Inspect explanations and evidence captured with a scan.
-Keep personal scanning and tracked threats in one experience.
-3. Threat Watch
-Threat Watch is intended for keeping suspicious or important targets on a personal watchlist.
-Save a target for continued attention.
-Record its target type and current assessment.
-Maintain monitoring status and optional notes.
-Store a notification preference for each item.
-Notification delivery and actual re-check frequency depend on the implementation and deployment configuration. A stored preference alone does not confirm that a notification was sent.
-4. Brand workspaces
-A brand workspace gives an organization a central place to define its legitimate digital identity and review suspected misuse.
-Brand profile, category, and website.
-Business and security contact information.
-Brand status and workspace membership.
-Related official assets, scans, findings, and monitoring schedules.
-Brand types represented in the data model include company/product, creator/public figure, government institution, and marketplace seller.
-5. Official brand asset registry
-Reference assets help define a brand’s legitimate online presence. Supported asset categories include:
-Domains and subdomains.
-Social-media handles.
-Trademarks.
-Merchant or marketplace identities.
-Mobile applications.
-Official contact channels.
-Assets are not automatically trusted just because they are submitted. The model includes PENDING_VERIFICATION, PENDING_DNS, VERIFIED, DISPUTED, and REJECTED states.
-6. Team membership and role-aware access
-Brand membership is modeled separately from a user's global account role.
-Workspace roles: OWNER, ADMIN, and MEMBER.
-Membership states: ACTIVE, INVITED, and REVOKED.
-Explicit user-to-brand relationships.
-A uniqueness constraint for each user/brand membership pair.
-Verify the current authorization implementation to confirm the exact permissions of each role.
-7. Threat findings and investigation workflow
-Suspected brand threats can be stored as structured findings with:
-Target and platform.
-Severity and risk score.
-Detection reason.
-Official asset used for comparison, where applicable.
-Evidence and repeat-scan count.
-Detection and update timestamps.
-The schema supports the following finding states:
-NEW → UNDER_INVESTIGATION → UNDER_REVIEW → an outcome such as CONFIRMED_THREAT, FALSE_POSITIVE, TAKEDOWN_REQUESTED, or RESOLVED.
-This is the available status vocabulary, not a requirement that every finding follow one fixed linear path. Investigation records can preserve a note, author identifier, action taken, and timestamp.
-8. Scheduled brand monitoring
-The project includes a brand-monitoring schedule model and a GitHub Actions workflow for automated monitoring. Monitoring records can track:
-Whether monitoring is enabled and its frequency in hours.
-Last and next run times.
-Execution status and worker-lock information.
-Consecutive failures and the latest error.
-Number of assets scanned and findings found in the latest run.
-[!NOTE] A workflow file and schedule model do not independently prove that a production job is running. Confirm workflow permissions, secrets, scheduling, logs, and successful execution in the deployment environment.
-9. Audit events and traceability
-The audit-event model provides a foundation for recording an action, metadata, timestamp, and optional user or brand association. Actual audit coverage depends on which application operations emit events.
-10. Security-oriented application structure
-The repository documents security-related controls and verification work including session verification, environment validation, Zod request validation, SSRF guard utilities, PostgreSQL row-level security (RLS) documentation, and scanner/tenant-isolation tests. These controls should be tested continuously and reviewed before production use.
+
+🔎 1. Suspicious URL and Input Scanning
+
+- Submit supported URLs and other implemented input types for assessment.
+- Normalize URLs before analysis.
+- Inspect available indicators and heuristic signals.
+- Present the resulting risk score and assessment verdict.
+- Display evidence and relevant findings when available.
+- Communicate limitations when external intelligence sources cannot be reached.
+
+📊 2. Main Intelligence Analysis Card
+
+The Main Intelligence Analysis Card is designed to provide a consolidated view of an assessment, including:
+
+- Risk score.
+- Risk verdict.
+- Confidence level.
+- Security findings and supporting evidence.
+- Intelligence provider status.
+- Coverage limitations.
+- Recommended next steps.
+
+The card is intended to provide consistent assessment information across the personal and brand dashboards. Its displayed information should be derived from the backend assessment response rather than independently recalculated by the frontend.
+
+🏢 3. Brand Workspace
+
+The brand workspace supports brand-focused threat management and related workflows, including:
+
+- Brand profile and asset management.
+- Brand threat review.
+- Investigation workflows.
+- Threat evidence review.
+- Monitoring configuration.
+- Intelligence and report views.
+
+Availability of individual workflows depends on the current backend implementation and deployment configuration.
+
+🕵️ 4. Threat Investigation
+
+The investigation workflow is designed to help authorized users review findings, record notes, and manage investigation status.
+
+Potential workflow states include:
+
+- "NEW"
+- "UNDER_INVESTIGATION"
+- "TAKEDOWN_REQUESTED"
+- "RESOLVED"
+- "FALSE_POSITIVE"
+
+These values should match the enums and validation rules used by the deployed backend.
+
+📡 5. Brand Threat Monitoring
+
+The platform includes monitoring-related functionality intended to support scheduled reassessment of brand-related risks.
+
+Monitoring results depend on configured schedules, working backend endpoints, available intelligence sources, and successful execution of scheduled jobs. A configuration screen alone does not establish that production monitoring is running.
+
+📝 6. Abuse Report Preparation
+
+The platform is designed to support preparation of abuse reports using available investigation information.
+
+Reports should be reviewed before submission. Generating or downloading a report does not mean it has been submitted to a provider, registrar, hosting company, or other external party.
+
+🔐 7. Authentication and Access Control
+
+The application uses Supabase Auth as its authentication foundation, with application-side role and workspace access controls.
+
+The intended access model distinguishes personal accounts, brand workspaces, workspace memberships, and authorized actions.
+
+📈 8. Dashboard and Insights
+
+Dashboard experiences are intended to provide visibility into assessment results, threat findings, investigation activity, and brand-related intelligence.
+
+Displayed metrics and charts should reflect actual available application data rather than fabricated threat counts or placeholder security results.
+
+---
+
 👥 Who Is It For?
-Audience
-Main value
-Individuals
-Assess suspicious targets and track items needing attention.
-Brand owners
-Register official assets and organize brand-protection work.
-Brand security/support teams
-Review findings, document investigations, and track outcomes.
-Developers and maintainers
-Work with a modular frontend, API backend, validation schemas, and relational data model.
-Evaluators and stakeholders
-Understand the use case, architecture, security considerations, and workflows.
-🔄 User Workflows
-Personal risk assessment
-Open RiskShield AI and sign in if the feature requires authentication.
-Submit a supported target through the scanner.
-The application validates and classifies the input.
-The scanning service produces a risk assessment.
-Review the status, score, explanation, and available evidence.
-Keep the result in the available history and, where supported, add the target to Threat Watch.
-Brand threat response
-Create or access a brand workspace.
-Register official assets and complete the required verification process.
-Run or enable the available brand-monitoring workflow.
-Review generated threat findings.
-Investigate a finding, record notes, and document actions taken.
-Update the finding status as the review progresses and close it when appropriate.
-🏗️ System Architecture
-RiskShield AI separates the frontend, API backend, business logic, and persistence layer.
+
+User| Purpose
+Individual users| Assess suspicious links and review available security findings.
+Brand owners| Manage brand information and review potential impersonation threats.
+Security teams| Review evidence and investigate potential digital risks.
+Investigation teams| Track findings and document investigation progress.
+
+---
+
+🔄 How It Works
+
+The general assessment workflow is:
+
+1. Submit: The user submits a supported URL or input.
+2. Normalize: The backend normalizes the input for consistent processing.
+3. Analyze: Available local heuristics and configured intelligence providers evaluate relevant indicators.
+4. Calculate: The backend generates an assessment using the available signals and scoring logic.
+5. Evaluate coverage: The system records whether intelligence providers were successfully checked or were unavailable or unconfigured.
+6. Present results: The frontend displays the risk score, verdict, confidence, evidence, and limitations.
+7. Investigate: Authorized users can review relevant findings and follow the available investigation workflow.
+
 flowchart TD
-    U[User / Brand Team] --> FE[React + Vite SPA]
-    FE --> API[Next.js API Routes]
-    API --> VAL[Zod Validation]
-    API --> AUTH[Session / Authorization Checks]
-    VAL --> SVC[Domain Services]
-    AUTH --> SVC
-    SVC --> SCAN[Scanner Service]
-    SVC --> BRAND[Brand & Membership Services]
-    SVC --> INV[Threat Investigation Service]
-    SVC --> MON[Brand Monitoring Service]
-    SCAN --> REPO[Repository / Prisma]
-    BRAND --> REPO
-    INV --> REPO
-    MON --> REPO
-    REPO --> DB[(PostgreSQL)]
-    CRON[Scheduled GitHub Actions Workflow] --> MON
-Layer
-Responsibility
-Frontend SPA
-UI, navigation, feature views, client state, and API interaction.
-API routes
-JSON request handling and application entry points.
-Validation/authentication
-Validate data and verify identity/session before protected operations.
-Domain services
-Coordinate scanning, brand management, monitoring, and investigation rules.
-Repository / Prisma
-Encapsulate database access and map domain models to PostgreSQL.
-PostgreSQL
-Persist users, brands, assets, scans, findings, watch items, audit events, and schedules.
-Scheduled workflow
-Trigger automated monitoring according to configured workflow settings.
-🧰 Technology Stack
-Technology
-Role
-React 18
-Component-based frontend UI.
-Vite
-Frontend development server and build tooling.
-TypeScript
-Static typing across application code.
-Tailwind CSS
-Utility-first styling.
-Framer Motion
-UI animation and transitions.
-React Router
-Client-side routing.
-Zustand
-Shared client-side state management.
-Next.js App Router
-Headless API backend and route handlers.
-Zod
-Runtime request validation and schema contracts.
-Prisma ORM
-Typed database access and schema/migration management.
-PostgreSQL
-Relational persistence.
-GitHub Actions
-Workflow automation for scheduled brand monitoring.
-Vercel / Render
-Documented frontend and backend deployment targets.
-📁 Repository Structure
-riskshield-ai/
+    A[User submits supported input] --> B[Backend normalization]
+    B --> C[Local heuristic analysis]
+    B --> D[Configured threat intelligence providers]
+    C --> E[Assessment and evidence aggregation]
+    D --> E
+    E --> F[Risk score, verdict and confidence]
+    E --> G[Provider status and coverage]
+    F --> H[Main Intelligence Analysis Card]
+    G --> H
+    H --> I[Review findings and recommended actions]
+    I --> J[Investigation workflow when applicable]
+
+The diagram describes the intended workflow. Actual provider execution and available features depend on the deployed configuration.
+
+---
+
+🧠 Main Intelligence Analysis
+
+RiskShield AI should distinguish between several different assessment dimensions.
+
+Dimension| Meaning
+Risk score| The score produced by the implemented assessment logic.
+Verdict| The backend's classification of the submitted input.
+Confidence| The system's confidence in the assessment, based on its implemented methodology.
+Evidence| Signals and observations supporting the assessment.
+Provider status| Whether an intelligence source returned a usable result, found a match, or failed to respond.
+Coverage| How much of the intended intelligence checking was actually completed.
+
+Understanding results
+
+- Threat detected: Available evidence supports a threat finding.
+- No known threat detected: No matching threat was identified by the sources that were successfully checked. This does not establish that the input is safe.
+- Limited coverage: The assessment could not use all intended intelligence sources.
+- Provider unavailable: A configured provider could not return a usable result.
+- Provider not configured: Required credentials, access, or configuration are missing.
+
+A provider failure must not be treated as a successful lookup with no threat match. Similarly, missing evidence must not be presented as proof that a threat does not exist.
+
+---
+
+🛠️ Technology Stack
+
+The following describes the project's intended technology architecture. Verify the exact installed versions against the repository's package files.
+
+Frontend
+
+- React — User interface.
+- Vite — Frontend development server and build tooling.
+- TypeScript — Static typing.
+- Tailwind CSS — Utility-first styling.
+- Framer Motion — Interface animations.
+- Lucide React — Icons.
+- React Router — Client-side navigation.
+- Zustand — Client-side state management.
+
+Backend
+
+- Next.js App Router — API backend using Route Handlers.
+- TypeScript — Backend implementation.
+- Zod — Request and data validation.
+- Prisma — Database ORM and schema management.
+
+Next.js is used as an API backend in the intended architecture; the frontend remains a separate React and Vite application.
+
+Database and Authentication
+
+- Supabase PostgreSQL — Relational database.
+- Supabase Auth — User authentication.
+- Prisma — Database access and schema management.
+- Row-Level Security (RLS) — Additional database access isolation where configured and correctly enforced.
+
+Deployment
+
+- Vercel — Frontend deployment.
+- Render — Intended backend hosting.
+- Supabase — Managed database and authentication services.
+
+---
+
+🏗️ System Architecture
+
+flowchart LR
+    U[User] --> F[React + Vite Frontend]
+    F --> A[Next.js API Route Handlers]
+    A --> V[Zod Validation]
+    V --> S[Authentication and Authorization]
+    S --> P[Prisma ORM]
+    P --> DB[(Supabase PostgreSQL)]
+    A --> H[Heuristic Analysis]
+    A --> TI[Configured Threat Intelligence Providers]
+    H --> R[Assessment Response]
+    TI --> R
+    DB --> R
+    R --> F
+
+Architecture principles
+
+- Keep the React and Vite frontend separate from the API backend.
+- Validate incoming API requests on the server.
+- Enforce authentication and authorization on protected endpoints.
+- Enforce workspace and tenant boundaries for brand-related data.
+- Keep private credentials and provider API keys on the server.
+- Return explicit provider status and assessment coverage information.
+- Avoid representing incomplete checks as definitive safety results.
+
+---
+
+📁 Project Structure
+
+The following is a conceptual structure. Use the actual paths in the repository when navigating the codebase.
+
+RiskShield-AI/
 ├── frontend/
 │   ├── src/
-│   │   ├── components/       # Shared UI components
-│   │   ├── pages/            # Route-level pages
-│   │   ├── routes/           # Route exports/configuration
-│   │   ├── features/         # Auth, scanner, dashboard, Threat Watch, brand workspace
-│   │   ├── hooks/            # Custom React hooks
-│   │   ├── lib/              # Scanner engine, classifier, guards, adapters
-│   │   ├── services/         # API and authentication service layer
-│   │   ├── stores/            # Zustand stores
-│   │   ├── types/             # Frontend domain contracts
-│   │   ├── styles/            # Theme and Tailwind tokens
-│   │   └── assets/            # Static assets
-│   ├── public/                # Public assets and SPA routing files
-│   ├── tests/                 # Frontend/security-related tests
-│   └── vercel.json            # Frontend deployment configuration
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── stores/
+│   │   └── ...
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.ts
+│
 ├── backend/
 │   ├── src/
-│   │   ├── app/api/            # JSON API route handlers
-│   │   ├── lib/                # Prisma, auth/session, env and SSRF utilities
-│   │   ├── modules/             # Domain modules
-│   │   ├── services/            # Business logic services
-│   │   ├── repositories/        # Data-access layer
-│   │   ├── schemas/             # Zod validation schemas
-│   │   └── types/               # Backend types
+│   │   ├── app/
+│   │   ├── services/
+│   │   ├── ...
+│   │   └── ...
 │   ├── prisma/
-│   │   ├── schema.prisma        # Canonical Prisma schema
-│   │   └── migrations/          # Database migrations
-│   └── tests/                   # API contracts and regression tests
-├── database/                    # RLS guidance and development seed resources
-├── docs/                        # Architecture, setup, schema, auth and API docs
-├── .github/workflows/           # Scheduled brand-monitoring workflow
-├── render.yaml                  # Render backend deployment blueprint
-├── vercel.json                  # Root deployment configuration
-├── package.json                 # Root workspace scripts
-└── README.md
+│   ├── tests/
+│   └── package.json
+│
+├── .github/
+│   └── workflows/
+├── README.md
+└── ...
+
+Some directories shown above are illustrative. Confirm their existence and the actual source layout before relying on this tree.
+
+---
+
 🚀 Getting Started
+
 Prerequisites
-Node.js and npm compatible with the repository dependencies.
-Git.
-PostgreSQL database access.
-Authentication-provider configuration required by the project (the schema references Supabase Auth).
-Environment variables for the frontend, backend, database, and authentication integration.
+
+Install the tools required by the repository:
+
+- Node.js compatible with the project's package and deployment configuration.
+- npm, or the package manager specified by the repository.
+- Git.
+- Access to the configured Supabase project.
+- Environment variables required by the frontend and backend.
+
 1. Clone the repository
+
 git clone https://github.com/Manukonda-Teja-Harsha/RiskShield-AI.git
 cd RiskShield-AI
+
 2. Install dependencies
-From the repository root:
+
+If the repository contains separate frontend and backend packages:
+
+cd frontend
 npm install
-The root package defines frontend and backend as npm workspaces. If your checkout or lockfile requires a different install procedure, follow the current setup documentation.
+
+Then install the backend dependencies:
+
+cd ../backend
+npm install
+
+If the repository uses npm workspaces or a root-level package manager configuration, follow the root "package.json" and lockfile instead.
+
 3. Configure environment variables
-Inspect the environment examples and setup guides in the checkout, such as .env.example, workspace-specific examples, and files under docs/. File names can differ between branches. Use the files actually present in your checkout as the source of truth. Never commit real credentials or secret keys.
-4. Configure the database
-The canonical Prisma schema is:
-backend/prisma/schema.prisma
-Configure the database variables and follow the repository's migration instructions. From the backend workspace, the general validation/generation workflow is:
+
+Create local environment files in the locations expected by the application. Use the environment-variable names already referenced by the source code and deployment settings.
+
+Never commit real credentials, tokens, database passwords, or API keys.
+
+4. Start the application
+
+Use the development commands defined in the relevant package files. For a split frontend/backend application, the frontend and backend may need to run in separate terminals.
+
+Example frontend command, if configured:
+
+cd frontend
+npm run dev
+
+Example backend command, if configured:
+
 cd backend
-npx prisma validate
-npx prisma generate
-Apply migrations using the project's documented migration workflow and the correct target database. Review migrations before applying them to production.
-5. Start the frontend
-From the repository root:
 npm run dev
-The README lists the Vite development URL as http://localhost:5173.
-6. Start the backend separately
-In a second terminal, from the repository root:
-npm run dev:backend
-Make sure backend environment variables are configured and PostgreSQL is reachable before testing API-backed features.
-7. Verify the project
-npm run typecheck
-npm run build
-A successful build is important, but it does not replace integration tests or manual verification of authentication, database access, scanner behavior, and scheduled jobs.
+
+The exact backend command depends on the scripts defined in the backend "package.json". Check those scripts before running the examples.
+
+---
+
 ⚙️ Environment Configuration
-Environment names may vary by branch and deployment. Check the environment example files and setup documentation before configuring the application.
-Variable
-Used by
-Purpose
-VITE_API_BASE_URL
+
+The application may require the following categories of configuration. These are examples, not a guarantee that every variable exists under exactly this name in the repository.
+
 Frontend
-Base URL of the deployed or local backend API.
-DATABASE_URL
-Backend / Prisma
-PostgreSQL connection string used by Prisma.
-DIRECT_URL
-Backend / Prisma
-Direct PostgreSQL connection string declared by the Prisma datasource.
-Authentication provider variables
-Backend and/or frontend
-Configure the authentication integration; use the exact names from the checked-in examples.
-Configuration guidelines
-Keep secrets out of source control and client-side bundles.
-Only expose VITE_ variables that are intended to be public frontend configuration.
-Set the production API base URL to the deployed backend.
-Use separate databases and credentials for development, testing, and production.
-Restrict CORS to approved frontend origins.
-Rotate credentials immediately if they are accidentally exposed.
-🧪 Available Commands
-Run these from the repository root unless otherwise specified.
-Command
-Purpose
-npm run dev
-Start the frontend development server.
-npm run dev:frontend
-Start the frontend explicitly.
-npm run dev:backend
-Start the backend development server.
-npm run build
-Build frontend and backend.
-npm run build:frontend
-Build only the frontend.
-npm run build:backend
-Build only the backend.
-npm run typecheck
-Run TypeScript checks across both workspaces.
-npm run preview
-Preview the built frontend.
-Check each workspace's package.json for exact test, lint, and database scripts. Do not assume a generic npm test script exists.
-🗃️ Data Model
-The canonical Prisma schema defines these core entities:
-Entity
-Responsibility
-User
-User profile, role, account state, and verification state.
-Brand
-Brand identity, category, contacts, website, and verification state.
-BrandMembership
-User-to-brand relationship, workspace role, and membership state.
-BrandAsset
-Official domain, social handle, trademark, merchant identity, app, or contact channel.
-ScanRecord
-Target, normalized target, risk status, score, explanation, evidence, and checked sources.
-BrandThreatFinding
-Suspected threat, severity, risk score, status, detection reason, and evidence.
-ThreatInvestigation
-Investigation notes and actions linked to a finding.
-ThreatWatchItem
-Personal watchlist target, assessment, monitoring state, preferences, and notes.
-AuditEvent
-Action record, optional metadata, timestamp, and optional user/brand association.
-BrandMonitorSchedule
-Monitoring frequency, run state, timestamps, lock information, and run summaries.
-Data integrity principles
-Brand assets start in a pending-verification state.
-User-to-brand membership pairs are constrained to be unique.
-Related records use database relationships to maintain referential integrity.
-Indexes support common lookups such as user, brand, normalized target, finding status, and monitoring schedule.
-RLS is documented as part of the database security approach; policy coverage must be verified against migrations and the deployed database.
+
+VITE_API_BASE_URL=http://localhost:4000
+
+Use the actual backend URL and the variable name referenced by the frontend source code. Vite-exposed variables are public to the browser bundle and must never contain secrets.
+
+Backend
+
+DATABASE_URL=your_database_connection_string
+DIRECT_URL=your_direct_database_connection_string
+
+Use these only if they match the Prisma schema and database configuration. Some deployments use a pooled connection for application traffic and a direct connection for migrations.
+
+Configure Supabase Auth using the server-side and public environment variables required by the current implementation. Configure provider credentials and any scheduled-job secrets only when the corresponding integration is enabled.
+
+Security requirements:
+
+- Do not commit ".env" or ".env.local" files containing real secrets.
+- Do not put private API keys in "VITE_*" variables.
+- Do not expose database connection strings in frontend code.
+- Use separate development and production credentials.
+- Set required environment variables in the relevant hosting platform.
+- Rotate any credential that has accidentally been committed or exposed.
+
+---
+
+📜 Available Scripts
+
+Run commands from the directory containing the relevant "package.json".
+
+Common script names may include:
+
+Command| Purpose
+"npm run dev"| Start a development server, if defined.
+"npm run build"| Build the application, if defined.
+"npm run typecheck"| Run TypeScript checks, if defined.
+"npm run test"| Run the configured test suite, if defined.
+"npm run start"| Start a production server, if defined.
+
+Check the actual "scripts" section in each "package.json" before using these commands. The available scripts may differ between the frontend and backend.
+
+---
+
 🔐 Security and Privacy
-Security is a core requirement for a platform that handles potentially harmful URLs and brand investigations.
-Security elements documented in the repository
-Session verification and environment validation utilities.
-Request validation through Zod schemas.
-SSRF guard utilities and related tests.
-PostgreSQL RLS documentation and migrations.
-Separate global user roles and brand-workspace membership roles.
-Structured scan and finding evidence for review.
-A User schema mapped to an external authentication identity that does not store plaintext passwords or password hashes.
-Production security checklist
-[ ]
-Confirm authentication and session validation on every protected API route.
-[ ]
-Test authorization for every brand-owned read and write operation.
-[ ]
-Verify RLS policies for all tenant-owned tables.
-[ ]
-Test SSRF protections for private IPs, internal hostnames, redirects, DNS rebinding, and unsupported URL schemes.
-[ ]
-Apply request-size limits, timeouts, rate limits, and safe error responses.
-[ ]
-Store secrets in hosting-provider secret settings, not source control.
-[ ]
-Review CORS, security headers, dependency advisories, and database permissions.
-[ ]
-Define retention, deletion, and access policies for evidence and investigation notes.
-[ ]
-Monitor repeated scan failures, scheduled-job failures, and suspicious usage.
-✅ Testing and Quality Checks
-The repository includes frontend and backend test areas, including scanner, tenant-isolation, API-contract, and regression verification.
-Recommended release checks:
-Static checks: TypeScript typecheck and production build.
-Scanner checks: valid inputs, malformed inputs, known test fixtures, inconclusive results, and unreachable targets.
-Security checks: SSRF scenarios and unauthorized/cross-tenant access attempts.
-Data checks: migrations, relationship constraints, and RLS behavior.
-Workflow checks: create a brand, register assets, create/review findings, add investigation notes, and close a finding.
-Automation checks: confirm scheduled jobs record results, handle errors, and avoid overlapping execution.
-Deployment checks: API connectivity, environment configuration, logs, health behavior, and frontend route refreshes.
-Use test commands actually defined in the workspace package files.
-☁️ Deployment
-The repository documents a split deployment model: Vercel for the frontend and Render for the backend.
-Frontend — Vercel
-Import the repository into Vercel.
-Configure the project to build the Vite frontend.
-Use the documented build command:
-npm --prefix frontend run build
-Set the output directory to frontend/dist.
-Set VITE_API_BASE_URL to the deployed backend URL.
-Verify SPA route fallback and security headers.
-Backend — Render
-Deploy using render.yaml or configure a web service pointing to backend/.
-Follow the repository README's documented buil
+
+Security is a core consideration for a platform that processes suspicious URLs, brand information, and investigation data.
+
+Authentication and authorization
+
+- Authenticate protected requests on the backend.
+- Validate roles and workspace membership before granting access.
+- Enforce authorization for every sensitive operation.
+- Do not rely on frontend route protection alone.
+- Verify that users can access only the records they are authorized to view or modify.
+
+Tenant isolation
+
+- Scope brand assets, findings, investigations, and reports to the correct workspace.
+- Enforce database-level isolation where configured.
+- Test attempts to access another workspace's records.
+- Avoid exposing private brand information through public endpoints or logs.
+
+URL scanning and SSRF protection
+
+URL scanners can be abused to make requests to internal or sensitive network resources. A secure implementation should:
+
+- Allow only supported URL schemes.
+- Reject loopback, private, link-local, and restricted IP destinations where appropriate.
+- Validate DNS resolution and the destination of outbound requests.
+- Recheck destinations after redirects.
+- Apply strict connection timeouts and response-size limits.
+- Restrict access to cloud metadata endpoints and internal services.
+- Avoid returning raw internal network errors to users.
+
+Secrets and provider failures
+
+- Store private credentials in server-side environment variables.
+- Apply request limits and timeouts to external providers.
+- Handle authentication errors, rate limits, and provider outages explicitly.
+- Avoid logging secrets, access tokens, or sensitive user data.
+- Never turn a failed provider lookup into a successful no-match result.
+
+These are security objectives and implementation considerations, not a claim that every control has been independently audited.
+
+---
+
+🛰️ Threat Intelligence and Limitations
+
+RiskShield AI's assessment quality depends on the available analysis logic, external data sources, provider permissions, credentials, and successful requests.
+
+External integrations can be unavailable or unconfigured. For example, an integration that requires billing, an API key, or a separate license cannot be assumed to work without that prerequisite.
+
+The platform should report the actual status of each source rather than claiming comprehensive real-time threat coverage.
+
+Important limitations
+
+- No intelligence match does not mean a URL is safe.
+- Newly created threats may not appear in existing feeds.
+- External providers may be unavailable, rate-limited, or misconfigured.
+- Local heuristics can miss threats or flag legitimate content.
+- A risk score is not a guarantee of a particular outcome.
+- Monitoring depends on actual scheduler execution and successful scans.
+- Brand ownership and asset verification require appropriate verification procedures.
+
+Do not enable a data source in production until its access requirements, permitted usage, credentials, and operational behavior have been confirmed.
+
+---
+
+🧪 Testing and Verification
+
+Testing should cover both expected behavior and failure conditions.
+
+Recommended verification areas include:
+
+- User registration, login, and session handling.
+- Protected API endpoints and role enforcement.
+- Workspace isolation and unauthorized access attempts.
+- URL normalization and validation.
+- Assessment score, verdict, confidence, and evidence consistency.
+- Provider no-match, unavailable, and not-configured states.
+- Investigation status transitions and note persistence.
+- Abuse report generation and recipient validation.
+- Monitoring configuration and actual scheduled execution.
+- Frontend build and backend type checking.
+- Production environment configuration and API connectivity.
+
+Example commands, if the corresponding scripts exist:
+
+npm run typecheck
+npm run test
+npm run build
+
+Run e
