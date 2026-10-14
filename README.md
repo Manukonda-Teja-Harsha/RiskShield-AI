@@ -20,7 +20,7 @@
 
 🌐 Live Demo
 
-Try RiskShield AI: "https://riskshield-ai-protect.vercel.app" (https://riskshield-ai-protect.vercel.app)
+Try RiskShield AI: "https://riskshield-ai-protect.vercel.app"
 
 Source Code: "GitHub Repository" (https://github.com/Manukonda-Teja-Harsha/RiskShield-AI)
 
